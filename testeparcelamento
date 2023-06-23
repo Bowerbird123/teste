@@ -1,0 +1,496 @@
+<style>
+body {
+font-family: Arial, sans-serif;
+background-color: #f7f7f7;
+}
+
+form {
+background-color: #fff;
+border: 1px solid #ccc;
+margin: 50px auto;
+max-width: 500px;
+padding: 20px;
+text-align: center;
+}
+
+h3 {
+margin-bottom: 20px;
+}
+
+button {
+background-color: #4CAF50;
+border: none;
+color: #fff;
+cursor: pointer;
+font-size: 16px;
+margin: 10px;
+padding: 10px 20px;
+text-align: center;
+text-decoration: none;
+transition: background-color 0.3s ease;
+}
+
+button:hover {
+background-color: #3e8e41;
+}
+
+#error {
+color: red;
+font-weight: bold;
+margin-top: 20px;
+}
+</style>
+
+<form>
+<div id="question1">
+<h3>Está falando com o titular?</h3>
+<button type="button" onclick="showQuestion2()">Sim</button>
+<button type="button" onclick="showError()">Não</button>
+</div>
+
+<div id="question2" style="display:none;">
+<h3>Perguntar a UC/endereço dos débitos.</h3>
+<button type="button" onclick="showQuestion3()">Próximo</button>
+</div>
+
+<div id="question3" style="display:none;">
+<h3>Confirmar dados pessoais e verificar se cliente está vinculado à UC.</h3>
+<button type="button" onclick="showQuestion4()">Próximo</button>
+</div>
+
+<div id="question4" style="display:none;">
+<h3>Verificar situação da UC (Ligada, Cortada ou Desligada).</h3>
+<button type="button" onclick="showQuestion5('Ligada')">Ligada</button>
+<button type="button" onclick="showQuestion5('Cortada')">Cortada</button>
+</div>
+
+<div id="question5Ligada" style="display:none;">
+<h3>Verificar se há débito vencido há mais de 60 dias.</h3>
+<button type="button" onclick="showQuestion6()">Próximo</button>
+</div>
+
+<div id="question5Cortada" style="display:none;">
+<h3>Todos os débitos vencidos podem ser incluídos.</h3>
+<button type="button" onclick="showQuestion6()">Próximo</button>
+</div>
+
+<div id="question6" style="display:none;">
+<h3>Se cliente possuir débitos em seu nome em UC desligada ou onde não possua mais vínculo, estes débitos precisam ser quitados antes ou precisam ser incluídos neste contrato de parcelamento.</h3>
+<button type="button" onclick="showQuestion7()">Não possui</button>
+</div>
+
+<div id="question7" style="display:none;">
+<h3>Informar que pelo 0800 pode parcelar em até 6x, mas existe a opção de fazer no site em até 12x.</h3>
+<button type="button" onclick="showQuestion10()">Cliente prefere pelo 0800</button>
+</div>
+
+<div id="question10" style="display:none;">
+<h3>Validar CPF no site da receita.</h3>
+<button type="button" onclick="showQuestion11()">CPF Válido</button>
+</div>
+
+<div id="question11" style="display:none;">
+<h3>Clicar em quadro resumo.</h3>
+<button type="button" onclick="showQuestion12()">Próximo</button>
+</div>
+
+<div id="question12" style="display:none;">
+<h3>Clicar em consolidação C/R.</h3>
+<button type="button" onclick="showQuestion13()">Próximo</button>
+</div>
+
+<div id="question13" style="display:none;">
+<h3>Marcar a caixinha escrito "faturas".</h3>
+<button type="button" onclick="showQuestion14()">Próximo</button>
+</div>
+
+<div id="question14" style="display:none;">
+<h3>Certificar-se que estão selecionadas apenas as faturas que serão parceladas.</h3>
+<button type="button" onclick="showQuestion15()">Próximo</button>
+</div>
+
+<div id="question15" style="display:none;">
+<h3>Clicar em negociação.</h3>
+<button type="button" onclick="showQuestion16()">Próximo</button>
+</div>
+
+<div id="question16" style="display:none;">
+<h3>No campo “Tipo de parcelamento”, selecionar sempre “FIXO ESPECIAL”.</h3>
+<button type="button" onclick="showQuestion17()">Próximo</button>
+</div>
+
+<div id="question17" style="display:none;">
+<h3>No campo “Nro. Parc”, digitar o número de parcelas que o cliente deseja, fora a entrada (máx 6, mas pode ser deixado até 12 se houver insistência).</h3>
+<button type="button" onclick="showQuestion18()">Próximo</button>
+</div>
+
+<div id="question18" style="display:none;">
+<h3>No campo “1o Vencto.” digitar a data de vencimento da primeira parcela, que deve ser 30 dias contados a partir da data de hoje (exemplo, se parcelamento for feito em 22/06, o vencimento da primeira parcela será em 22/07).</h3>
+<button type="button" onclick="showQuestion19()">Próximo</button>
+</div>
+
+<div id="question19" style="display:none;">
+<h3>Clicar em “Valores”.</h3>
+<button type="button" onclick="showQuestion20()">Próximo</button>
+</div>
+
+<div id="question20" style="display:none;">
+<h3>No campo "Valor à vista", informar o valor da entrada desejado pelo cliente. O valor mínimo é 30% do total e o seu vencimento de 7 dias não pode ser alterado.</h3>
+<button type="button" onclick="showQuestion21()">Próximo</button>
+</div>
+
+<div id="question21" style="display:none;">
+<h3>Informar os valores ao cliente e, se ele concordar, clicar no botão “Confirma”.</h3>
+<button type="button" onclick="showQuestion22()">Próximo</button>
+</div>
+
+<div id="question22" style="display:none;">
+<h3>Selecionar “Efetivar geração” e clicar em “Processar”.</h3>
+<button type="button" onclick="showQuestion24()">Próximo</button>
+</div>
+
+<div id="question24" style="display:none;">
+<h3>Informar ao cliente que você enviará as parcelas por e-mail.</h3>
+<button type="button" onclick="showQuestion27('valido')">E-mail do cadastro ainda é válido</button>
+<button type="button" onclick="showQuestion26('invalido')">Cliente utiliza outro e-mail</button>
+</div>
+
+<div id="question26" style="display:none;">
+<h3>Atualize o e-mail do cadastro na aplicação NOM.</h3>
+<button type="button" onclick="showQuestion27()">Próximo</button>
+</div>
+
+<div id="question27" style="display:none;">
+<h3>Clicar em “Segunda Via” na tela inicial do Cis.</h3>
+<button type="button" onclick="showQuestion28()">Próximo</button>
+</div>
+
+<div id="question28" style="display:none;">
+<h3>Selecionar o solicitante.</h3>
+<button type="button" onclick="showQuestion29()">Próximo</button>
+</div>
+
+<div id="question29" style="display:none;">
+<h3>Se o telefone for o mesmo do qual o cliente está ligando, clicar em “OK”.</h3>
+<button type="button" onclick="showQuestionXYZ('ok')">Telefone de contato é o mesmo do qual o cliente está ligando</h3>
+<button type="button" onclick="showQuestion31('cadastrar')">Telefone de contato diferente do cadastro</button>
+</div>
+
+<div id="question31" style="display:none;">
+<h3>Clicar em “Alterar” e questionar se pode deixar o telefone do qual o cliente está ligando como contato.</h3>
+<button type="button" onclick="showQuestion33('any')">Cliente deixou</button>
+<button type="button" onclick="showQuestion33('any')">Cliente prefere deixar outro telefone</button>
+</div>
+
+<div id="question33" style="display:none;">
+<h3>Digitar o telefone atualizado para contato no seu devido campo e clicar em "OK".</h3>
+<button type="button" onclick="showQuestionXYZ('ok')">Próximo</button>
+</div>
+
+<div id="questionXYZ" style="display:none;">
+<h3>Em “Impressão de fatura”, selecione “Por e-mail”.</h3>
+<button type="button" onclick="showQuestion34()">Próximo</button>
+</div>
+
+<div id="question34" style="display:none;">
+<h3>Se o campo de e-mail não estiver com o e-mail correto, inserir o correto.</h3>
+<button type="button" onclick="showQuestion35()">Próximo</button>
+</div>
+
+<div id="question35" style="display:none;">
+<h3>Selecionar a entrada e as parcelas.</h3>
+<button type="button" onclick="showQuestion36()">Próximo</button>
+</div>
+
+<div id="question36" style="display:none;">
+<h3>Como é a primeira via, não será cobrado taxa de envio.</h3>
+<button type="button" onclick="showQuestion37()">Próximo</button>
+</div>
+
+<div id="question37" style="display:none;">
+<h3>Clicar no botão “Confirma”.</h3>
+<button type="button" onclick="showQuestion38()">Próximo</button>
+</div>
+
+<div id="question38" style="display:none;">
+<h3>Oferecer e cadastrar fatura digital e débito automático, se cliente concordar, conforme seus devidos procedimentos.</h3>
+<button type="button" onclick="showQuestion40()">Próximo</button>
+</div>
+
+<div id="question40" style="display:none;">
+<h3>Procedimento finalizado! Se a unidade estiver cortada, orientar que o cliente precisa pagar a entrada e apresentar o seu comprovante na agência ou aguardar sua baixa automática para pedir religação.</h3>
+<button type="button" onclick="restart()">Reiniciar</button>
+</div>
+  <div id="error" style="display:none;">
+    <h3>Apenas o titular pode realizar o parcelamento.</h3>
+</div>
+</form>
+
+<script>
+  function showQuestion2() {
+    document.getElementById("question1").style.display = "none";
+    document.getElementById("question2").style.display = "block";
+  }
+
+ 
+
+  function showError() {
+    document.getElementById("question1").style.display = "none";
+    document.getElementById("error").style.display = "block";
+  }
+ 
+ 
+
+  function showQuestion3() {
+    document.getElementById("question2").style.display = "none";
+    document.getElementById("question3").style.display = "block";
+  }
+
+ 
+
+  function showQuestion4() {
+    document.getElementById("question3").style.display = "none";
+    document.getElementById("question4").style.display = "block";
+  }
+
+ 
+
+  function showQuestion5(option) {
+    document.getElementById("question4").style.display = "none";
+    if (option === 'Ligada') {
+      document.getElementById("question5Ligada").style.display = "block";
+    } else if (option === 'Cortada') {
+      document.getElementById("question5Cortada").style.display = "block";
+    }
+  }
+
+ 
+
+  function showQuestion6() {
+    if (document.getElementById("question5Ligada").style.display === "block") {
+      document.getElementById("question5Ligada").style.display = "none";
+    } else if (document.getElementById("question5Cortada").style.display === "block") {
+      document.getElementById("question5Cortada").style.display = "none";
+    }
+    document.getElementById("question6").style.display = "block";
+  }
+
+ 
+
+  function showQuestion7() {
+    document.getElementById("question6").style.display = "none";
+    document.getElementById("question7").style.display = "block";
+  }
+
+
+ 
+
+  function showQuestion10() {
+    document.getElementById("question7").style.display = "none";
+    document.getElementById("question10").style.display = "block";
+  }
+
+ 
+
+function showQuestion11() {
+document.getElementById("question10").style.display = "none";
+document.getElementById("question11").style.display = "block";
+}
+
+ 
+
+function showQuestion12() {
+document.getElementById("question11").style.display = "none";
+document.getElementById("question12").style.display = "block";
+}
+
+ 
+
+function showQuestion13() {
+document.getElementById("question12").style.display = "none";
+document.getElementById("question13").style.display = "block";
+}
+
+ 
+
+function showQuestion14() {
+document.getElementById("question13").style.display = "none";
+document.getElementById("question14").style.display = "block";
+}
+
+ 
+
+function showQuestion15() {
+document.getElementById("question14").style.display = "none";
+document.getElementById("question15").style.display = "block";
+}
+
+
+function showQuestion16() {
+document.getElementById("question15").style.display = "none";
+document.getElementById("question16").style.display = "block";
+
+}
+
+
+function showQuestion17() {
+document.getElementById("question16").style.display = "none";
+document.getElementById("question17").style.display = "block";
+
+}
+
+
+function showQuestion18() {
+document.getElementById("question17").style.display = "none";
+document.getElementById("question18").style.display = "block";
+
+}
+
+
+function showQuestion19() {
+document.getElementById("question18").style.display = "none";
+document.getElementById("question19").style.display = "block";
+
+}
+
+
+function showQuestion20() {
+document.getElementById("question19").style.display = "none";
+document.getElementById("question20").style.display = "block";
+
+}
+
+
+function showQuestion21() {
+document.getElementById("question20").style.display = "none";
+document.getElementById("question21").style.display = "block";
+
+}
+
+
+function showQuestion22() {
+document.getElementById("question21").style.display = "none";
+document.getElementById("question22").style.display = "block";
+
+}
+
+
+function showQuestion24() {
+document.getElementById("question22").style.display = "none";
+document.getElementById("question24").style.display = "block";
+
+}
+
+
+function showQuestion26(option) {
+document.getElementById("question24").style.display = "none";
+    if (option === 'valido') {
+      document.getElementById("question27").style.display = "block";
+    } else if (option === 'invalido') {
+      document.getElementById("question26").style.display = "block";
+    }
+  }
+
+
+function showQuestion27() {
+    if (document.getElementById("question24").style.display === "block") {
+      document.getElementById("question24").style.display = "none";
+    } else if (document.getElementById("question26").style.display === "block") {
+      document.getElementById("question26").style.display = "none";
+    }
+document.getElementById("question27").style.display = "block";
+
+}
+
+
+function showQuestion28() {
+document.getElementById("question27").style.display = "none";
+document.getElementById("question28").style.display = "block";
+
+}
+
+
+function showQuestion29() {
+document.getElementById("question28").style.display = "none";
+document.getElementById("question29").style.display = "block";
+
+}
+
+
+function showQuestion31(option) {
+document.getElementById("question29").style.display = "none";
+    if (option === 'ok') {
+      document.getElementById("questionXYZ").style.display = "block";
+    } else if (option === 'cadastrar') {
+      document.getElementById("question31").style.display = "block";
+    }
+}
+
+
+function showQuestion33(option) {
+document.getElementById("question31").style.display = "none";
+    if (option === 'any') {
+      document.getElementById("question33").style.display = "block";
+      }
+}
+
+
+function showQuestionXYZ() {
+    if (document.getElementById("question29").style.display === "block") {
+      document.getElementById("question29").style.display = "none";
+    } else if (document.getElementById("question33").style.display === "block") {
+      document.getElementById("question33").style.display = "none";
+    }
+document.getElementById("questionXYZ").style.display = "block";
+
+}
+
+
+function showQuestion34() {
+document.getElementById("questionXYZ").style.display = "none";
+document.getElementById("question34").style.display = "block";
+
+}
+
+
+function showQuestion35() {
+document.getElementById("question34").style.display = "none";
+document.getElementById("question35").style.display = "block";
+
+}
+
+
+function showQuestion36() {
+document.getElementById("question35").style.display = "none";
+document.getElementById("question36").style.display = "block";
+
+}
+
+
+function showQuestion37() {
+document.getElementById("question36").style.display = "none";
+document.getElementById("question37").style.display = "block";
+
+}
+
+
+function showQuestion38() {
+document.getElementById("question37").style.display = "none";
+document.getElementById("question38").style.display = "block";
+
+}
+
+
+function showQuestion40(option) {
+document.getElementById("question38").style.display = "none";
+document.getElementById("question40").style.display = "block";
+
+}
+
+
+function restart() {
+document.getElementById("question40").style.display = "none";
+document.getElementById("question1").style.display = "block";
+}
+
+</script>
